@@ -1,6 +1,6 @@
 # pwp
 playtime with provisioning
 
-vagrant
-lxc
-ansible
+- vagrant
+- lxc
+- ansible
