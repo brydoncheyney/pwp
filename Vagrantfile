@@ -120,14 +120,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   #   chef.validation_client_name = "ORGNAME-validator"
 
-  config.vm.network 'private_network', ip: '192.168.2.100', lxc__bridge_name: 'vlxcbr1'
+  config.vm.define 'app01'
+
+  #config.vm.network 'private_network', ip: '192.168.2.100', lxc__bridge_name: 'vlxcbr1'
   #config.vm.network 'forwarded_port', guest: 80, host: 8080
+
+  if Vagrant.has_plugin?('vagrant-hosts')
+    config.vm.provision :hosts
+  end
 
   config.vm.provision 'ansible' do |ansible|
     ansible.playbook = 'provisioning/playbook.yml'
     ansible.sudo = true
     ansible.groups = {
-      'webservers' => ['default']
+      'webservers' => ['app01']
     }
   end
 end
