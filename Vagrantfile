@@ -121,6 +121,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   chef.validation_client_name = "ORGNAME-validator"
 
   config.vm.define 'app01'
+  config.vm.synced_folder 'data', '/vagrant_data'
 
   #config.vm.network 'private_network', ip: '192.168.2.100', lxc__bridge_name: 'vlxcbr1'
   #config.vm.network 'forwarded_port', guest: 80, host: 8080
