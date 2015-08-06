@@ -134,7 +134,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = 'provisioning/playbook.yml'
     ansible.sudo = true
     ansible.groups = {
-      'webservers' => ['app01']
+      'webservers' => ['app01'],
+      'databases' => ['app01']
     }
   end
 end
