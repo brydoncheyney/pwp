@@ -1,0 +1,3 @@
+handlers:    
+- name: restart sensu-client
+  action: service name=sensu-client pattern=/etc/init.d/sensu-client state=restarted enabled=yes

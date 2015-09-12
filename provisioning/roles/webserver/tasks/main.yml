@@ -1,0 +1,8 @@
+tasks:
+- name: add nginx repo
+  copy: src=files/nginx.repo dest=/etc/yum.repos.d/nginx.repo
+
+- name: install nginx
+  yum: name=nginx state=latest
+  notify:
+  - restart nginx

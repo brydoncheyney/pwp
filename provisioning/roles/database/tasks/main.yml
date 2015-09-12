@@ -1,0 +1,8 @@
+tasks:
+- name: add mongodb repo
+  copy: src=files/mongodb.repo dest=/etc/yum.repos.d/mongodb.repo
+
+- name: install mongodb-org
+  yum: name=mongodb-org state=latest
+  notify:
+  - restart mongodb

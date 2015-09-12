@@ -1,9 +1,10 @@
 # pwp
 playtime with provisioning
 
-* vagrant
-* lxc
-* ansible
+- vagrant
+- lxc
+- ansible
+- capistrano
 
 ## dependencies
 
@@ -15,6 +16,3 @@ containers, add the following to /etc/resolvconf/resolv.conf.d/head on the host
 to update /etc/resolv.conf, run
 
     $ sudo resolvconf -u
-    
-
-

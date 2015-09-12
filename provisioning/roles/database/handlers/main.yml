@@ -1,0 +1,3 @@
+handlers:    
+- name: restart mongodb
+  action: service name=mongod pattern=/etc/init.d/mongod state=restarted enabled=yes
