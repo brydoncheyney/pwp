@@ -1,0 +1,15 @@
+{
+  "rabbitmq": {
+    "host" : "{{sensu_server_ip_address.stdout}}",
+    "port" : 5672,
+    "vhost": "/sensu",
+    "user": "sensu",
+    "password": "sensu"
+  },
+  "client": {
+    "name": "{{ansible_nodename}}",
+    "address": "{{host_ip_address.stdout}}",
+    "subscriptions": ["basic_checks"]
+  }
+}
+

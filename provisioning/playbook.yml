@@ -4,6 +4,7 @@
     tasks:
     - name: add nginx repo
       copy: src=files/nginx.repo dest=/etc/yum.repos.d/nginx.repo
+
     - name: install nginx
       yum: name=nginx state=latest
       notify:
@@ -18,6 +19,7 @@
     tasks:
     - name: add mongodb repo
       copy: src=files/mongodb.repo dest=/etc/yum.repos.d/mongodb.repo
+
     - name: install mongodb-org
       yum: name=mongodb-org state=latest
       notify:
@@ -27,3 +29,47 @@
     - name: restart mongodb
       action: service name=mongod pattern=/etc/init.d/mongod state=restarted enabled=yes
 
+  - hosts: monitoring-clients
+
+    tasks:
+    - name: add sensu repo
+      copy: src=files/sensu.repo dest=/etc/yum.repos.d/sensu.repo
+
+    - name: install sensu 
+      yum: name={{item}} state=latest
+      with_items:
+      - sensu
+
+    - name: get hostname
+      command: "hostname"
+      register: host_name
+
+    - name: get host ip address
+      #command: "hostname -i"
+      shell: 'ifconfig eth0 | grep ''inet addr'' | awk ''{print $2}'' | cut -d: -f2'
+      register: host_ip_address
+
+    - name: get sensu server ip address
+      shell: 'grep nameserver /etc/resolv.conf | awk ''{print $2}'''
+      register: sensu_server_ip_address
+
+    - name: copy sensu config
+      template: src=templates/{{item}} dest=/etc/sensu/conf.d/{{item}}
+      with_items:
+      - client.json
+      notify: 
+      - restart sensu-client
+
+    - name: install sensu-community-plugins
+      copy: src=files/plugins dest=/etc/sensu/ owner=sensu group=sensu mode=0755
+      notify: 
+      - restart sensu-client
+
+    - name: sensu should use embedded ruby
+      copy: src=files/sensu dest=/etc/default/sensu
+      notify: 
+      - restart sensu-client
+
+    handlers:    
+    - name: restart sensu-client
+      action: service name=sensu-client pattern=/etc/init.d/sensu-client state=restarted enabled=yes
