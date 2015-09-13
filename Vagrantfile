@@ -12,20 +12,38 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.scope = :box
   end
 
-  config.vm.define 'app01'
-  config.vm.synced_folder 'data', '/vagrant_data'
+  config.vm.define 'web' do |web|
+    web.vm.synced_folder 'data', '/vagrant_data'
 
-  if Vagrant.has_plugin?('vagrant-hosts')
-    config.vm.provision :hosts
+    if Vagrant.has_plugin?('vagrant-hosts')
+      web.vm.provision :hosts
+    end
+
+    web.vm.provision 'ansible' do |ansible|
+      ansible.playbook = 'provisioning/playbook.yml'
+      ansible.sudo = true
+      ansible.groups = {
+        'webservers'  => ['web'],
+        'monitoring'  => ['web']
+      }
+    end
   end
 
-  config.vm.provision 'ansible' do |ansible|
-    ansible.playbook = 'provisioning/playbook.yml'
-    ansible.sudo = true
-    ansible.groups = {
-      'webservers'  => ['app01'],
-      'databases'   => ['app01'],
-      'monitoring'  => ['app01']
-    }
+  config.vm.define 'db' do |db|
+    db.vm.synced_folder 'data', '/vagrant_data'
+
+    if Vagrant.has_plugin?('vagrant-hosts')
+      db.vm.provision :hosts
+    end
+
+    db.vm.provision 'ansible' do |ansible|
+      ansible.playbook = 'provisioning/playbook.yml'
+      ansible.sudo = true
+      ansible.groups = {
+        'databases'   => ['db'],
+        'monitoring'  => ['db']
+      }
+    end
   end
+
 end
