@@ -40,6 +40,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "fgrehm/centos-6-64-lxc"
 
+  config.ssh.insert_key = false
+
   if Vagrant.has_plugin?('vagrant_cachier')
     config.cache.scope = :box
   end
